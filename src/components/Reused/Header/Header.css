@@ -1,0 +1,32 @@
+.header {
+    box-sizing: border-box;
+
+    position: sticky;
+    display: flex;
+
+    min-height: 74px;
+
+    padding-top: 18px;
+    background-color: #465DFF;
+  }
+
+.header_login {
+    background-color: #FFFFFF;;
+}
+
+.header_container {
+    display: flex;
+}
+
+
+  @media (max-width: 1279px) {
+    .header {
+        padding: 0 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .header {
+        padding: 0 14px;
+    }
+}
