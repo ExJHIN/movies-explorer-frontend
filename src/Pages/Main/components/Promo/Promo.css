@@ -4,17 +4,23 @@
     margin: 0 auto;
     width: 100%;
     padding: 75px 70px;
+    height: 598px;
+}
+.promo_global_container-content {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
 
-    height: 598px;
 }
+
+
 
 .promo_global_container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     padding: 0;
     width: 100%;
@@ -23,6 +29,7 @@
 .promo_text_container {
     flex-direction: column;
     display: flex;
+    max-width: 680px;
 }
 
 .promo_text_main {
@@ -33,7 +40,7 @@
     font-size: 50px;
     margin: 0;
     line-height: 58px;
-    max-width: 640px;
+    max-width: 680px;
 }
 
 .promo_text_paragraph {
@@ -74,6 +81,7 @@
     border-radius: 3px;
     transition: all .3s ease;
     cursor: pointer;
+    margin-top: 84px;
 }
 .promo_button:hover {
     color:#2BE080;
@@ -81,7 +89,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media screen and (max-width: 967px) {
     .promo_section{
         padding: 140px 20px 76px;
         height: 858px;
@@ -93,6 +101,11 @@
         justify-content: center;
         align-items: center;
         margin-top: 48px;
+        max-width: 680px;
+        white-space: normal;
+    }
+    .promo_center_contain {
+        max-width: 768px;
     }
     .promo_icon_container {
         order: 1;
@@ -108,13 +121,23 @@
         text-align: center;
         mix-blend-mode: normal;
         margin: 22px 0 0 0;
+        max-width: 260px;
     }
     .promo_global_container{
         justify-content: center;
+        flex-wrap: wrap;
+    }
+    .promo_global_container-content {
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .promo_button{
+        margin-top: 92px;
     }
 }
 
-@media (max-width: 521px) {
+@media screen and (max-width: 568px) {
     .promo_section{
         padding: 70px 0 30px ;
         height: 644px;
@@ -141,8 +164,23 @@
         align-items: center;
         margin-top: 44px;
     }
-    .promo_icon_container{
+    .promo_icon_container {
         width: 210px;
         height: 206px;
+    }
+    .promo_global_container {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .promo_global_container-content {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .promo_button{
+        margin-top: 80px;
     }
 }
