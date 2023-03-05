@@ -25,6 +25,20 @@ export function AboutMe() {
                         <img src={Selfie} alt="Фото разработчика" className="aboutme_paragraph_photo"/>
                     </div>
                 </div>
+                <article className="aboutme_portfolio_container">
+                    <span className="aboutrme_portfolio_title">Портфолио</span>
+                    <div className="aboutme_portfolio_container-link">
+                        <a className="aboutme_portfolio_links" href="https://exjhin.github.io/How-to-learn.github.io/">Статичный сайт
+                            <a className="aboutme_portfolio_icon">↗</a>
+                        </a>
+                        <a className="aboutme_portfolio_links about_portfolio_link_pad" href="https://exjhin.github.io/russian-travel/">Адаптивный сайт
+                            <a className="aboutme_portfolio_icon">↗</a>
+                        </a>
+                        <a className="aboutme_portfolio_links-last about_portfolio_link_pad" href="https://social-network.mesto.nomoredomains.work">Одностраничное приложение
+                            <a className="aboutme_portfolio_icon">↗</a>
+                        </a>
+                    </div>
+                </article>
             </div>
         </section>
     );
