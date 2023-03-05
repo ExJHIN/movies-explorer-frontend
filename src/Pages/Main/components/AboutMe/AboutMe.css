@@ -192,10 +192,6 @@
         line-height: 27px;
     }
 
-    .aboutme_paragraph_history {
-        max-width: 364px;
-    }
-
     .aboutme_title_name {
         font-size: 40px;
         line-height: 40px;
@@ -250,9 +246,6 @@
         align-items: center;
     }
 
-    .aboutme_paragraph_history {
-        max-width: 292px;
-    }
     .aboutme_title_name {
         font-size: 30px;
         line-height: 36px;
@@ -268,8 +261,8 @@
         margin: 40px 0 0 0;
     }
     .photo_container {
-        width: 292px;
-        height: 352px;
+        width: 100%;
+        height: 100%;
         margin: 0 0 40px 0;
     }
     .aboutme_portfolio_links {
@@ -293,5 +286,8 @@
     }
     .aboutme_portfolio_container-link {
         margin: 40px 0 0 0;
+    }
+    .aboutme_text_container {
+        width: 100%;
     }
 }
