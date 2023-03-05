@@ -4,7 +4,7 @@
     margin: 0 auto;
     width: 100%;
     padding: 75px 70px;
-    height: 598px;
+    height: 574px;
 }
 .promo_global_container-content {
     max-width: 1280px;
@@ -92,7 +92,7 @@
 @media screen and (max-width: 967px) {
     .promo_section{
         padding: 140px 20px 76px;
-        height: 858px;
+        height: 850px;
         align-items: center;
     }
     .promo_text_container {
@@ -140,7 +140,7 @@
 @media screen and (max-width: 568px) {
     .promo_section{
         padding: 70px 0 30px ;
-        height: 644px;
+        height: 636px;
         align-items: center;
     }
     .promo_text_main{
