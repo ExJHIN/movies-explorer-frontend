@@ -3,24 +3,9 @@ import { Link as RouterLink, NavLink, useLocation } from "react-router-dom";
 import  "./Header.css";
 
 export function Header({isLogged}) {
-
-// Стиль в зависимости от logIn
-  const headerStyle = isLogged 
-    ? 'header  header_login' 
-    : 'header';
-
-//   const [isLog, setLog] = useState(true);
-//   const [isMenuOpened, setIsMenuOpened] = useState(false);
-//   const loc = useLocation();
-  
-
-//   useEffect(() => {
-//     setIsMenuOpened(false);
-//   }, [loc]);
-
   return (
     <header
-      className={headerStyle}
+      className="header"
     >
       <div className="header_container container">
         <div className="header_link-logo">

@@ -3,7 +3,9 @@ import './FilterCheckbox.css';
 export function FilterCheckBox() {
 
     return (
-        <div className="filtercheckbox_section">
-        </div>
+        <label className="filtercheckbox_container">
+            <input type="checkbox" hidden></input>
+            <span></span>
+        </label>
     );
 }

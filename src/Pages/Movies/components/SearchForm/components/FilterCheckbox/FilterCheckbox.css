@@ -1,0 +1,7 @@
+.filtercheckbox_container {
+    display: flex;
+    font-size: 13px;
+    line-height: 18px;
+    align-items: center;
+    gap: 14px;
+  }
