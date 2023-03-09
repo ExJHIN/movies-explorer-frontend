@@ -1,7 +1,16 @@
 import  "./HeaderAuthorized.css";
+import { useState } from "react";
 import logo from '../../images/icon_profile.svg';
 
+
 export function HeaderAuthorized() {
+
+  const [isActive, setIsActive] = useState(false);
+
+  const onClickHandler = () => {
+    setIsActive(prev => !prev);
+  }
+
   return (
     <header
       className="header_auth"
@@ -20,11 +29,27 @@ export function HeaderAuthorized() {
                 <img src={logo} alt="Icon profile" className="header_auth_icon"/>
             </a>
         </nav>
-        <button className="header_auth_mobile">
-            <div className="header_auth_mobile-bord"></div>
-            <div className="header_auth_mobile-bord"></div>
-            <div className="header_auth_mobile-bord"></div>
-        </button>
+        <div id="menuToggle" className="header_togle_menu menuToggle">
+
+          <input type="checkbox" onClick={onClickHandler}/>
+          <div 
+            className={`blur ${isActive ? 'blur_active' : '' }`}
+          />
+
+          <span className="header_auth_mobile-bord"></span>
+          <span className="header_auth_mobile-bord"></span>
+          <span className="header_auth_mobile-bord"></span>
+
+          <ul id="menu">
+            <a href="#" className="header_auth_mobile-bord"><li>Главная</li></a>
+            <a href="#" className="header_auth_mobile-bord"><li>Фильмы</li></a>
+            <a href="#" className="header_auth_mobile-bord"><li>Сохранённые&nbsp;фильмы</li></a>
+            <a className="header__auth_button header__auth_button-burger" href="/profile">
+                Аккаунт
+                <img src={logo} alt="Icon profile" className="header_auth_icon"/>
+            </a>
+          </ul>
+        </div>
       </div>
     </header>
   );
