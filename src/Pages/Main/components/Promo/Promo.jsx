@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Link as RouterLink, NavLink, useLocation } from "react-router-dom";
 import logo from '../../../../images/text__COLOR_landing-logo.svg';
 import './Promo.css';
 

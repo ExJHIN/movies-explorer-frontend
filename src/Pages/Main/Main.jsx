@@ -3,6 +3,7 @@ import { AboutProject } from './components/AboutProject/index';
 import { Techs } from './components/Techs/index';
 import { Header } from '../../ui/Header/index';
 import { AboutMe } from './components/AboutMe/index';
+import { Footer} from '../../ui/Footer/index';
 import './Main.css';
 
 export function Main() {
@@ -13,6 +14,7 @@ export function Main() {
         <AboutProject/>
         <Techs/>
         <AboutMe/>
+        <Footer/>
       </main>
     );
   }

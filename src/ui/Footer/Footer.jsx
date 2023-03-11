@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Link as RouterLink, NavLink, useLocation } from "react-router-dom";
 import  "./Footer.css";
 
 export function Footer() {

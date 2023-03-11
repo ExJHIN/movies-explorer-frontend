@@ -3,9 +3,9 @@ import '../Main/Main.css';
 import { SearchForm } from '../../components/SearchForm/index';
 import { MoviesCardList } from './components/MoviesCardList/index';
 import { Footer } from '../../ui/Footer/index';
-import './Movies.css';
+import './SavedMovies.css';
 
-export function Movies() {
+export function SavedMovies() {
     return (
       <main className="main_container">
         <HeaderAuthorized />

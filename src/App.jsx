@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Main } from './Pages/Main/index';
 import { Movies } from './Pages/Movies/index';
-import { Footer } from './ui/Footer/index';
+import { SavedMovies } from './Pages/SavedMovies/index';
+import { NotFound } from './Pages/NotFound/index';
+
 import './index.css';
 
 function App() {
@@ -10,8 +12,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/movies" element={<Movies />} />
+        <Route path="/saved-movies" element={<SavedMovies />}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer/>
     </>
   );
 }

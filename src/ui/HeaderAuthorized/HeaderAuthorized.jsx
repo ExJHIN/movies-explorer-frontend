@@ -1,6 +1,6 @@
-import  "./HeaderAuthorized.css";
 import { useState } from "react";
 import logo from '../../images/icon_profile.svg';
+import  "./HeaderAuthorized.css";
 
 
 export function HeaderAuthorized() {
@@ -17,7 +17,9 @@ export function HeaderAuthorized() {
     >
       <div className="header_container container">
         <div className="header_link-logo">
-            <div className="header_logo" href="#"></div>
+          <a href="/">
+            <div className="header_logo"></div>
+          </a>
         </div>
         <nav className="header_auth_navigation">
             <div className="header_auth_navbar">
@@ -41,9 +43,9 @@ export function HeaderAuthorized() {
           <span className="header_auth_mobile-bord"></span>
 
           <ul id="menu">
-            <a href="#" className="header_auth_mobile-bord"><li>Главная</li></a>
-            <a href="#" className="header_auth_mobile-bord"><li>Фильмы</li></a>
-            <a href="#" className="header_auth_mobile-bord"><li>Сохранённые&nbsp;фильмы</li></a>
+            <a href="/" className="header_auth_mobile-bord"><li>Главная</li></a>
+            <a href="/movies" className="header_auth_mobile-bord"><li>Фильмы</li></a>
+            <a href="/saved-movies" className="header_auth_mobile-bord"><li>Сохранённые&nbsp;фильмы</li></a>
             <a className="header__auth_button header__auth_button-burger" href="/profile">
                 Аккаунт
                 <img src={logo} alt="Icon profile" className="header_auth_icon"/>
