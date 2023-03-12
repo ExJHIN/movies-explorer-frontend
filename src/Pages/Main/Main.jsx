@@ -8,13 +8,15 @@ import './Main.css';
 
 export function Main() {
     return (
-      <main className="main_container">
+      <>
         <Header />
-        <Promo />
-        <AboutProject/>
-        <Techs/>
-        <AboutMe/>
+        <main className="main_container">
+          <Promo />
+          <AboutProject/>
+          <Techs/>
+          <AboutMe/>
+        </main>
         <Footer/>
-      </main>
+      </>
     );
   }
