@@ -9,6 +9,9 @@ export function MoviesCardList() {
             <div className="moviescardlist_gloval_container">
                 <div className="moviescardlist_movies_container">
                     <MoviesCard/>
+                    <MoviesCard/>
+                    <MoviesCard/>
+                    <MoviesCard/>
                 </div>
                 <MoviesStillButton/>
             </div>
