@@ -1,4 +1,5 @@
 import Selfie from '../../../../images/portfolio_photo.jpg';
+import { Link } from "react-router-dom";
 import './AboutMe.css';
 
 export function AboutMe() {
@@ -27,13 +28,13 @@ export function AboutMe() {
                     <span className="aboutrme_portfolio_title">Портфолио</span>
                     <div className="aboutme_portfolio_container-link">
                         <a className="aboutme_portfolio_links" href="https://exjhin.github.io/How-to-learn.github.io/">Статичный сайт
-                            <a className="aboutme_portfolio_icon">↗</a>
+                            <Link className="aboutme_portfolio_icon">↗</Link>
                         </a>
                         <a className="aboutme_portfolio_links about_portfolio_link_pad" href="https://exjhin.github.io/russian-travel/">Адаптивный сайт
-                            <a className="aboutme_portfolio_icon">↗</a>
+                            <Link className="aboutme_portfolio_icon">↗</Link>
                         </a>
                         <a className="aboutme_portfolio_links-last about_portfolio_link_pad" href="https://social-network.mesto.nomoredomains.work">Одностраничное приложение
-                            <a className="aboutme_portfolio_icon">↗</a>
+                            <Link className="aboutme_portfolio_icon">↗</Link>
                         </a>
                     </div>
                 </article>

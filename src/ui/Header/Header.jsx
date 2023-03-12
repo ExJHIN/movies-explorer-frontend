@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import  "./Header.css";
 
 export function Header({isLogged}) {
@@ -7,11 +8,11 @@ export function Header({isLogged}) {
     >
       <div className="header_container container">
         <div className="header_link-logo">
-            <div className="header_logo" href="#"></div>
+            <div className="header_logo" href="/"></div>
         </div>
         <nav className="header_navigation">
-            <a className="header_films-link header_custom-link" href="/signup">Регистрация</a>
-            <a className="header_films-link_button" href="/signin">Войти</a>
+            <Link className="header_films-link header_custom-link" to="/signup">Регистрация</Link>
+            <Link className="header_films-link_button" to="/signin">Войти</Link>
         </nav>
       </div>
     </header>

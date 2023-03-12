@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import  "./NotFound.css";
 
 export function NotFound() {
@@ -11,7 +11,7 @@ const history = useNavigate();
                 <h1 className="notfound_title">404</h1>
                 <span className="notfound_error_text">Страница не найдена</span>
             </div>
-            <a className="notfound_button_esc history-back"  onClick={() => history(-1)}>Назад</a>
+            <Link className="notfound_button_esc history-back"  onClick={() => history(-1)}>Назад</Link>
         </section>
     </main>
   );

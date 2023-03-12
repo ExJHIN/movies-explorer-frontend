@@ -178,6 +178,8 @@
 
 .aboutme_portfolio_icon {
     line-height: 60px;
+    text-decoration: none;
+    color: #000000;
 }
 
 @media screen and (max-width: 967px) {
