@@ -27,15 +27,15 @@ export function AboutMe() {
                 <article className="aboutme_portfolio_container">
                     <span className="aboutrme_portfolio_title">Портфолио</span>
                     <div className="aboutme_portfolio_container-link">
-                        <a className="aboutme_portfolio_links" href="https://exjhin.github.io/How-to-learn.github.io/">Статичный сайт
-                            <Link className="aboutme_portfolio_icon">↗</Link>
-                        </a>
-                        <a className="aboutme_portfolio_links about_portfolio_link_pad" href="https://exjhin.github.io/russian-travel/">Адаптивный сайт
-                            <Link className="aboutme_portfolio_icon">↗</Link>
-                        </a>
-                        <a className="aboutme_portfolio_links-last about_portfolio_link_pad" href="https://social-network.mesto.nomoredomains.work">Одностраничное приложение
-                            <Link className="aboutme_portfolio_icon">↗</Link>
-                        </a>
+                        <Link className="aboutme_portfolio_links" to="https://exjhin.github.io/How-to-learn.github.io/">Статичный сайт
+                            <span className="aboutme_portfolio_icon">↗</span>
+                        </Link>
+                        <Link className="aboutme_portfolio_links about_portfolio_link_pad" to="https://exjhin.github.io/russian-travel/">Адаптивный сайт
+                            <span className="aboutme_portfolio_icon">↗</span>
+                        </Link>
+                        <Link className="aboutme_portfolio_links-last about_portfolio_link_pad" to="https://social-network.mesto.nomoredomains.work">Одностраничное приложение
+                            <span className="aboutme_portfolio_icon">↗</span>
+                        </Link>
                     </div>
                 </article>
             </div>
