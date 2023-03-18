@@ -12,7 +12,7 @@ export function Register() {
                     </Link>
                 </div>
                 <h1 className="register_title">Добро пожаловать!</h1>
-                <form className="register_form" noValidate>
+                <form className="register_form" noValidate name={'register'}>
                         <label className="register_form_label">Имя</label>
                         <input className="register_form_input" required type="text" id="name" name="name" placeholder="Имя" defaultValue="Павел" maxLength="12" minLength="3"/>
                         <label className="register_form_label">E-mail</label>
