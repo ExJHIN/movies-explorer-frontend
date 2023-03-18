@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import  "./Login.css";
 
-export function Login() {
+export function Login({handleLogin}) {
   return (
     <main className="main_container">
         <section className="register_section">

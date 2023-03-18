@@ -6,10 +6,10 @@ import { AboutMe } from './components/AboutMe/index';
 import { Footer} from '../../ui/Footer/index';
 import './Main.css';
 
-export function Main() {
+export function Main({isLogin}) {
     return (
       <>
-        <Header />
+        <Header isLogin={isLogin} />
         <main className="main_container">
           <Promo />
           <AboutProject/>

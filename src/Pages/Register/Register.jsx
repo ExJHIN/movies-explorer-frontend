@@ -1,7 +1,37 @@
 import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { useForm } from "react-hook-form";
 import  "./Register.css";
 
-export function Register() {
+export function Register({handleRegister}) {
+
+const [isName, setName] = useState('');
+const [isEmail, setEmail] = useState('');
+const [isPassword, setPassword] = useState('');
+
+function onChangeNameHandler(event) {
+    setName(event.target.value);
+};
+
+const { register, formState : { errors, isValid},
+    handleSubmit,
+    reset,} = useForm({
+    mode: "onChange"
+});
+
+const onChangeRegisterHandler = () => {
+    handleRegister(isName, isEmail, isPassword);
+    reset();
+};
+
+function onChangeEmailHandler(event) {
+    setEmail(event.target.value);
+};
+
+function onChangePasswordHandler(event) {
+    setPassword(event.target.value);
+};
+
   return (
     <main className="main_container">
         <section className="register_section">
@@ -12,7 +42,7 @@ export function Register() {
                     </Link>
                 </div>
                 <h1 className="register_title">Добро пожаловать!</h1>
-                <form className="register_form" noValidate name={'register'}>
+                <form className="register_form" name={'register'} onSubmit={handleSubmit(onChangeRegisterHandler)}>
                         <label className="register_form_label">Имя</label>
                         <input className="register_form_input" required type="text" id="name" name="name" placeholder="Имя" defaultValue="Павел" maxLength="12" minLength="3"/>
                         <label className="register_form_label">E-mail</label>
@@ -20,7 +50,7 @@ export function Register() {
                         <label className="register_form_label">Пароль</label>
                         <input className="register_form_input password_color" required type="password" id="password" name="password" placeholder="password" defaultValue="••••••••••••••"/>
                         <span className="register_form_input-error">Что-то пошло не так...</span>
-                        <button className="register_form_button">Зарегистрироваться</button>
+                        <button className="register_form_button" disabled={!isValid} type="submit">Зарегистрироваться</button>
                         <p className="register_form_paragraph">
                             Уже зарегистрированы?<a className="register_form_link" href="/signin">Войти</a>
                         </p>
