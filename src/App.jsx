@@ -111,7 +111,6 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     <CurrentUserContext.Provider value={currentUser}>
       <Routes>
         <Route path="/" element={<Main isLogin={logIn} />} />
-        <Route path="*" element={<NotFound />} />
         <Route exact path="/signup" 
           element={!logIn 
             ? (<Register handleRegister={handleRegister}/>) 
@@ -122,9 +121,10 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
             ? (<Login handleLogin={handleLogin}/>) 
             : (<Navigate to='/'/> )} 
         />
-        <ProtectedRoute path='/movies' logIn={logIn} element={<Movies />} />
-        <ProtectedRoute path="/saved-movies" logIn={logIn} element={<SavedMovies />} />
-        <ProtectedRoute path="/profile" logIn={logIn} element={<Profile />} />
+        <Route path="/movies" element={<ProtectedRoute logIn={logIn} component={Movies} />} />
+        <Route path="/saved-movies" element={<ProtectedRoute logIn={logIn} component={SavedMovies} />} />
+        <Route path="/profile" element={<ProtectedRoute logIn={logIn} component={Profile} />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </CurrentUserContext.Provider>
     </>

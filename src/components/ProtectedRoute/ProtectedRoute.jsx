@@ -1,8 +1,10 @@
-import { Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import React from "react";
 
-export const ProtectedRoute = ({ logIn, children,  ...props }) => {
+export const ProtectedRoute = ({ component: Component,  ...props }) => {
   return (
-    <Route {...props} {...logIn ? children : <Navigate to="/"/> }/>
+    <>
+    props.logIn ? <Component {...props} /> : <Navigate to="/" replace/>
+    </> 
   );
 };
