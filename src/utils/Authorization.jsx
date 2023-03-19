@@ -1,4 +1,4 @@
-export const BASE_URL = `https://vpm-movies.nomoredomains.work/`;
+export const BASE_URL = `https://vpm-movies.nomoredomains.work`;
 
 const checkHelper = (res) => {
     if (res.ok) {
@@ -10,13 +10,14 @@ const checkHelper = (res) => {
 
 export const gettingUserInfo = (token) => {
     return fetch
-    (`${BASE_URL}/users/me`, 
+    (`${BASE_URL}/users/me`,
     {
+      method: "GET",
       headers: {
+          'Accept': 'application/json',
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-      method: "GET",
       credentials: 'include',
     })
     .then(checkHelper)

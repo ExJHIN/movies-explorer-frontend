@@ -14,7 +14,7 @@ import './index.css';
 import { ProtectedRoute } from './components/ProtectedRoute/index';
 
 function App() {
-const history = useNavigate();
+const navigate = useNavigate();
 
 const [isLoad, setIsLoad] = useState(false);
 
@@ -28,7 +28,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
   useEffect(() => {
     if (logIn) {
       setIsLoad(true)
-      Api.getProfile()
+      Api.gettingUserInfo()
       .then((user) => {
         setCurrentUser(user.user);
       })
@@ -57,11 +57,12 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     .then((res) => {
       Api.updateToken(res['token']);
       setLogIn(true);
-      if (res.token) {
+      if (res['token']) {
         localStorage.setItem("jwt", res['token']);
         tokenCheck();
-        history.push("/movies");
-        // Navigate("/movies");
+        console.log("BAD");
+        console.log(logIn);
+        navigate("/movies", { replace: true });
       }})
     .catch((err) => {
         console.log(err);
@@ -76,8 +77,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     localStorage.removeItem('jwt');
     setLogIn(false);
     localStorage.clear();
-    history.push('/');
-    // Navigate("/");
+    navigate("/", { replace: true });
   };
 
   const tokenCheck = () => {
@@ -86,9 +86,12 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
         setIsLoad(true)
         Authorization.gettingUserInfo(jwt).then((res) =>  {
           if (res) {
+            const userData = res;
             setLogIn(true);
             setIsLoad(true)
             setIsLoadTrue(false);
+            setCurrentUser(userData);
+            // console.log(logIn);
           } else {
             setLogIn(false);
           }})
@@ -104,26 +107,19 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     tokenCheck();
   }, []);
 
+  
   if (isLoadTrue) return null;
   
   return (
     <>
     <CurrentUserContext.Provider value={currentUser}>
       <Routes>
-        <Route path="/" element={<Main isLogin={logIn} />} />
-        <Route exact path="/signup" 
-          element={!logIn 
-            ? (<Register handleRegister={handleRegister}/>) 
-            : (<Navigate to='/'/>)} 
-        />
-        <Route exact path="/signin" 
-          element={!logIn 
-            ? (<Login handleLogin={handleLogin}/>) 
-            : (<Navigate to='/'/> )} 
-        />
+        <Route exact path="/" element={<Main logIn={logIn} />} />
+        <Route path="/signup" element={<Register handleRegister={handleRegister}/>} />
+        <Route path="/signin" element={<Login handleLogin={handleLogin}/>}/>
         <Route path="/movies" element={<ProtectedRoute logIn={logIn} component={Movies} />} />
         <Route path="/saved-movies" element={<ProtectedRoute logIn={logIn} component={SavedMovies} />} />
-        <Route path="/profile" element={<ProtectedRoute logIn={logIn} component={Profile} />} />
+        <Route path="/profile" element={<ProtectedRoute logIn={logIn} exit={exit} component={Profile} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </CurrentUserContext.Provider>

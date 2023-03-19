@@ -2,7 +2,7 @@ import { HeaderAuthorized } from '../../ui/HeaderAuthorized/index';
 import  "./Profile.css";
 
 
-export function Profile() {
+export function Profile({exit}) {
 
   return (
     <>
@@ -23,7 +23,7 @@ export function Profile() {
                 <button className="profile_edit" type="submit">Редактировать</button>
               </form>
               <div className="profile_edit_container">
-                <button className="profile_edit_button" type="button">Выйти из аккаунта</button>
+                <button className="profile_edit_button" type="button" onClick={exit}>Выйти из аккаунта</button>
               </div>
             </div>
           </section>

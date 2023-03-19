@@ -89,7 +89,7 @@ class MainApi {
 const token = localStorage.getItem('jwt');
 
 export const Api = new MainApi({
-  baseUrl: `https://vpm-movies.nomoredomains.work/`,
+  baseUrl: `https://vpm-movies.nomoredomains.work`,
   headers: {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
