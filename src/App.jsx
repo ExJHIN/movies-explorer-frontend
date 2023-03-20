@@ -30,7 +30,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
       setIsLoad(true)
       Api.gettingUserInfo()
       .then((user) => {
-        setCurrentUser(user.user);
+        setCurrentUser(user);
       })
       .catch((res) => console.log(res))
       .finally(
@@ -60,7 +60,6 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
       if (res['token']) {
         localStorage.setItem("jwt", res['token']);
         tokenCheck();
-        console.log("BAD");
         console.log(logIn);
         navigate("/movies", { replace: true });
       }})
@@ -80,17 +79,39 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     navigate("/", { replace: true });
   };
 
+  const getUsetInfoProfile = (name, email) => {
+    setIsLoad(true);
+		Api.updateUser(name, email)
+			.then(
+        (res) => {
+        console.log(res);
+        console.log(res.name);
+				setCurrentUser(res);
+        setisAuthorizedCompleted(true);
+        // handleInfoTooltipPopupClick();
+        // setInfoTooltipText('Данные обновлены');
+			  }
+      )
+			.catch(
+        (err) => {
+        console.log(err)
+				// handleInfoTooltipPopupClick();
+        setisAuthorizedCompleted(false);
+        // setInfoTooltipText(`${err.message}`);
+			  }
+      )
+      .finally(()=> setIsLoad(false))
+	};
+
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
       if (jwt) {
         setIsLoad(true)
         Authorization.gettingUserInfo(jwt).then((res) =>  {
           if (res) {
-            const userData = res;
             setLogIn(true);
             setIsLoad(true)
             setIsLoadTrue(false);
-            setCurrentUser(userData);
             // console.log(logIn);
           } else {
             setLogIn(false);
@@ -119,7 +140,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
         <Route path="/signin" element={<Login handleLogin={handleLogin}/>}/>
         <Route path="/movies" element={<ProtectedRoute logIn={logIn} component={Movies} />} />
         <Route path="/saved-movies" element={<ProtectedRoute logIn={logIn} component={SavedMovies} />} />
-        <Route path="/profile" element={<ProtectedRoute logIn={logIn} exit={exit} component={Profile} />} />
+        <Route path="/profile" element={<ProtectedRoute logIn={logIn} exit={exit} getUsetInfoProfile={getUsetInfoProfile} component={Profile} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </CurrentUserContext.Provider>

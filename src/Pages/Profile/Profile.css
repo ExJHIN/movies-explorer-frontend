@@ -112,6 +112,14 @@
     color: #EE3465;
     transition: all .3s ease;
 }
+.profile_edit_button_disabled {
+    display: none;
+}
+
+
+.profile_edit_container_disabled {
+    display: none;
+}
 
 .profile_edit_button:hover {
     opacity: 0.5;
