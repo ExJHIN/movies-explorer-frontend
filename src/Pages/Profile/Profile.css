@@ -113,7 +113,7 @@
     transition: all .3s ease;
 }
 .profile_edit_button_disabled {
-    display: none;
+    opacity: 0.6;
 }
 
 
@@ -147,4 +147,8 @@
     .profile_section {
         padding: 0 30px;
     }
+    .profile_button {
+        margin: 267px 0 14px 0;
+    }
 }
+

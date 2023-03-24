@@ -10,13 +10,13 @@ export function Profile({exit, getUsetInfoProfile}) {
 
   const [isEmail, setEmail] = useState(currentUser.email);
   const [isName, setName] = useState(currentUser.name);
-  const [isActive, setActive]= useState(false);
+  const [isActiveSave, setActiveSave]= useState(false);
 
   const profileName = useRef(currentUser.name);
   const profileEmail = useRef(currentUser.email);
 
   const editingButtonActive = () => {
-    setActive(prev => !prev);
+    setActiveSave(prev => !prev);
   }
 
   const {
@@ -24,6 +24,7 @@ export function Profile({exit, getUsetInfoProfile}) {
     handleSubmit,
     setValue,
     formState : { errors, isValid},
+    reset,
   } = useForm
   (
     {
@@ -34,7 +35,7 @@ export function Profile({exit, getUsetInfoProfile}) {
 		  },
     }
   );
-
+  
   function onChangeNameHandler(event) {
 		setName(event.target.value);
     setValue('name', event.target.value);
@@ -47,6 +48,7 @@ export function Profile({exit, getUsetInfoProfile}) {
 
   function getUsetInfoHandler() {
 		getUsetInfoProfile(isName, isEmail);
+    reset();
 	}
 
   profileName.current = currentUser.name;
@@ -129,10 +131,14 @@ export function Profile({exit, getUsetInfoProfile}) {
                     {errors?.ValidateProfileEmail?.message || "Что-то пошло не так..."}
                   </span>
                 }
-                <button className={`${isActive ? 'profile_edit_button_disabled' : 'profile_edit'}`} type="button" disabled={!isValid}  onClick={editingButtonActive}>Редактировать</button>
-                <button className={`${isActive && isValid ? 'register_form_button login_button' : 'profile_edit_button_disabled'}`} disabled={!isValid} onClick={editingButtonActive} type="submit">Сохранить</button>
+                {!isActiveSave ? (
+                  <button className="profile_edit" type="submit"  onClick={editingButtonActive}>Редактировать</button>
+                ):(
+                  <button className={`${ isValid ? 'register_form_button profile_button' : 'register_form_button profile_button profile_edit_button_disabled'}`}  disabled={!isValid} onClick={editingButtonActive} type="submit">Сохранить</button>
+                )
+              }
               </form>
-              <div className={`${isActive ? 'profile_edit_container_disabled' : 'profile_edit_container'}`}>
+              <div className="profile_edit_container">
                 <button className="profile_edit_button" type="button" onClick={exit}>Выйти из аккаунта</button>
               </div>
             </div>

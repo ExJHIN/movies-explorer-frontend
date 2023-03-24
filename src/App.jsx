@@ -18,7 +18,12 @@ const navigate = useNavigate();
 
 const [isLoad, setIsLoad] = useState(false);
 
-const [currentUser, setCurrentUser] = useState({name: '', email: '', _id: ''});
+const [currentUser, setCurrentUser] = useState
+({
+    name: '', 
+    email: '', 
+    _id: ''
+});
 const [logIn, setLogIn] = useState(false);
 
 const [isLoadTrue, setIsLoadTrue] = useState(true);
@@ -46,9 +51,8 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
 			handleLogin(email, password);
 		})
 		.catch((err) => {
-			// handleInfoTooltipPopupClick();
       setisAuthorizedCompleted(false);
-      // setInfoTooltipText(`${err.message}`);
+      alert(`${err.message}`);
 		});
 	};
 
@@ -65,9 +69,8 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
       }})
     .catch((err) => {
         console.log(err);
-        // handleInfoTooltipPopupClick();
         setisAuthorizedCompleted(false);
-        // setInfoTooltipText(`${err.message}`);
+        alert(`${err.message}`);
       });
     };
 
@@ -88,16 +91,14 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
         console.log(res.name);
 				setCurrentUser(res);
         setisAuthorizedCompleted(true);
-        // handleInfoTooltipPopupClick();
-        // setInfoTooltipText('Данные обновлены');
+        alert('Данные обновлены');
 			  }
       )
 			.catch(
         (err) => {
         console.log(err)
-				// handleInfoTooltipPopupClick();
         setisAuthorizedCompleted(false);
-        // setInfoTooltipText(`${err.message}`);
+        alert(`${err.message}`);
 			  }
       )
       .finally(()=> setIsLoad(false))
@@ -112,7 +113,6 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
             setLogIn(true);
             setIsLoad(true)
             setIsLoadTrue(false);
-            // console.log(logIn);
           } else {
             setLogIn(false);
           }})
@@ -133,17 +133,36 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
   
   return (
     <>
-    <CurrentUserContext.Provider value={currentUser}>
-      <Routes>
-        <Route exact path="/" element={<Main logIn={logIn} />} />
-        <Route path="/signup" element={<Register handleRegister={handleRegister}/>} />
-        <Route path="/signin" element={<Login handleLogin={handleLogin}/>}/>
-        <Route path="/movies" element={<ProtectedRoute logIn={logIn} component={Movies} />} />
-        <Route path="/saved-movies" element={<ProtectedRoute logIn={logIn} component={SavedMovies} />} />
-        <Route path="/profile" element={<ProtectedRoute logIn={logIn} exit={exit} getUsetInfoProfile={getUsetInfoProfile} component={Profile} />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </CurrentUserContext.Provider>
+      <CurrentUserContext.Provider value={currentUser}>
+        <Routes>
+          <Route exact path="/" element={<Main logIn={logIn} />} />
+          <Route path="/signup" element=
+            {!logIn
+              ? (<Register handleRegister={handleRegister}/>)
+              : (<Navigate to='/'/>)}
+          />
+          <Route path="/signin" element=
+            {!logIn
+              ? (<Login handleLogin={handleLogin}/>)
+              : (<Navigate to='/'/>)}
+          />
+          <Route path="/movies" 
+            element={<ProtectedRoute logIn={logIn} 
+            component={Movies} />} 
+          />
+          <Route path="/saved-movies" 
+            element={<ProtectedRoute logIn={logIn} 
+            component={SavedMovies} />} 
+          />
+          <Route path="/profile" 
+            element={<ProtectedRoute logIn={logIn} 
+            exit={exit} 
+            getUsetInfoProfile={getUsetInfoProfile} 
+            component={Profile} />} 
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </CurrentUserContext.Provider>
     </>
   );
 }

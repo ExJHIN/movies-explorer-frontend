@@ -50,21 +50,22 @@ class MainApi {
     {
       method: "POST",
       headers: this._headers,
-      body: JSON.stringify({
-        country: dataMovies.country,
-        director: dataMovies.director,
-        duration: dataMovies.duration,
-        year: dataMovies.year,
-        description: dataMovies.description,
-        image: dataMovies.image,
-        trailerLink: (validator.isURL(dataMovies.trailerLink) 
-            ? dataMovies.trailerLink 
-            : 'https://www.youtube.com/'),
-        nameRU: dataMovies.nameRU,
-        nameEN: dataMovies.nameEN,
-        thumbnail: dataMovies.thumbnail,
-        movieId: dataMovies.id,
-      }),
+      // body: JSON.stringify({
+      //   country: dataMovies.country,
+      //   director: dataMovies.director,
+      //   duration: dataMovies.duration,
+      //   year: dataMovies.year,
+      //   description: dataMovies.description,
+      //   image: dataMovies.image,
+      //   trailerLink: (validator.isURL(dataMovies.trailerLink) 
+      //       ? dataMovies.trailerLink 
+      //       : 'https://www.youtube.com/'),
+      //   nameRU: dataMovies.nameRU,
+      //   nameEN: dataMovies.nameEN,
+      //   thumbnail: dataMovies.thumbnail,
+      //     movieId: dataMovies.id,
+      // }),
+      body: JSON.stringify(dataMovies),
       credentials: 'include',
     })
     .then(this._checkHelper)

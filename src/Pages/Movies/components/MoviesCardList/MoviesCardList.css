@@ -23,6 +23,14 @@
     padding: 70px 0 10px 0;
 }
 
+.moviescardlist_movies_notfound {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0 20px 0;
+}
+
 .movie_card {
     display: flex;
     flex-direction: column;

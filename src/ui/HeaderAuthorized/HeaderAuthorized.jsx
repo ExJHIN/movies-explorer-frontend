@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import logo from '../../images/icon_profile.svg';
 import  "./HeaderAuthorized.css";
 
@@ -7,23 +7,10 @@ import  "./HeaderAuthorized.css";
 export function HeaderAuthorized() {
 
   const [isActive, setIsActive] = useState(false);
-  const [isActiveMoviesLink, setIsActiveMoviesLink] = useState(false);
-  const [isActiveSavedMoviesLink, setIsActiveSavedMoviesLink] = useState(false);
-
   const onClickHandler = () => {
     setIsActive(prev => !prev);
   }
-
-  const onClickMoviesLinkHandler = () => {
-    setIsActiveMoviesLink(prev => !prev);
-    console.log(isActiveMoviesLink);
-  }
-
-  const onClickSavedMoviesLinkHandler = () => {
-    setIsActiveSavedMoviesLink(prev => !prev);
-  }
-
-
+ 
   return (
     <header
       className="header_auth"
@@ -36,8 +23,18 @@ export function HeaderAuthorized() {
         </div>
         <nav className="header_auth_navigation">
             <div className="header_auth_navbar">
-                <Link className={`${isActiveMoviesLink ? 'header__auth_navlink header__auth_navlink_active' : 'header__auth_navlink'}`} to="/movies" onClick={onClickMoviesLinkHandler}>Фильмы</Link>
-                <Link className={`${isActiveSavedMoviesLink ? 'header__auth_navlink header__auth_navlink_active' : 'header__auth_navlink'}`} to="/saved-movies" onClick={onClickSavedMoviesLinkHandler}>Сохранённые фильмы</Link>
+                <NavLink 
+                  className={({isActive}) => `${isActive ? "header__auth_navlink header__auth_navlink_active" : "header__auth_navlink"}`}
+                  to="/movies"
+                >
+                  Фильмы
+                </NavLink>
+                <NavLink 
+                  className={({isActive}) => `${isActive ? "header__auth_navlink header__auth_navlink_active" : "header__auth_navlink"}`}
+                  to="/saved-movies"
+                >
+                  Сохранённые фильмы
+                </NavLink>
             </div>
             <Link className="header__auth_button" to="/profile">
                 Аккаунт
