@@ -17,14 +17,11 @@ const [movies, setMovies] = useState([]);
 
 const [preloadMovies, setPreloadMovies] = useState(false);
 
-const [countMoviesShowMore, setCountMoviesShowMore] = useState([]);
 const [hiddenMovies, setHiddenMovies] = useState([]);
 
 const [saveMovies, setSaveMovies] = useState(null);
 
 const [shortFilmsCheckbox, setShortFilmsCheckbox] = useState([]);
-
-const [moviesSearchForm, setMoviesSearchForm] = useState('');
 
 const [MoviesCheckbox, setMoviesCheckbox] = useState(false);
 

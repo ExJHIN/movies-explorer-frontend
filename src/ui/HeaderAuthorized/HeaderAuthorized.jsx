@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from '../../images/icon_profile.svg';
 import  "./HeaderAuthorized.css";

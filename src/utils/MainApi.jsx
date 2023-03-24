@@ -1,5 +1,3 @@
-const validator = require('validator');
-
 class MainApi {
   constructor({baseUrl, headers, credentials}) {
     this._headers = headers;

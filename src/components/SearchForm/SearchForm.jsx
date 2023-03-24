@@ -1,6 +1,5 @@
-import {useState,useContext, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import { useForm } from "react-hook-form";
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { FilterCheckBox } from './components/FilterCheckbox/index';
 import './SearchForm.css';
 
@@ -14,7 +13,6 @@ const { register, formState :
     }
 );
 
-const currentUser = useContext(CurrentUserContext);
 const [isInputValue,setIsInputValue] = useState('');
 const [checkbox, setCheckbox] = useState(false);
 

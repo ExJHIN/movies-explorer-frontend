@@ -1,10 +1,8 @@
-import { useState, useContext, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import { HeaderAuthorized } from '../../ui/HeaderAuthorized';
 import { SearchForm } from '../../components/SearchForm/index';
 import { MoviesCardList } from './components/MoviesCardList/index';
 import { Footer } from '../../ui/Footer/index';
-import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { ApiMovies } from '../../utils/MoviesApi';
 import { Preloader } from '../Movies/components/Preloader/index';
 import { Api } from '../../utils/MainApi';
@@ -14,8 +12,6 @@ import '../Main/Main.css';
 import './Movies.css';
 
 export function Movies() {
-const currentUser = useContext(CurrentUserContext);
-const  path  = useLocation();
 const [movies, setMovies] = useState([]);
 const [preloadMovies, setPreloadMovies] = useState(false);
 const [countMoviesShowMore, setCountMoviesShowMore] = useState([]);
