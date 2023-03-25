@@ -72,7 +72,6 @@ async function onChangeGetMoviesOnCheckboxActive(checkbox) {
 async function onChangeGetMoviesHandler(isInputValue) {
   setShortFilmsCheckbox(false);
   localStorage.setItem('shortFilmsCheckbox', false);
-
   if (!isInputValue) {
     return false;
   }
@@ -151,7 +150,7 @@ async function onClickSavedMovies(movie, save) {
     if (arrayMovies) 
     {
       const registerFilter = JSON.parse(arrayMovies);
-      setSaveMovies(registerFilter.splice(0, getDynamicMovies()[0]));
+      setMovies(registerFilter.splice(0, getDynamicMovies()[0]));
       setHiddenMovies(registerFilter);
       setPreloadMovies(false);
     }
