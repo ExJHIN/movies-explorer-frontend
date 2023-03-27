@@ -5,22 +5,25 @@ import { MoviesCardList } from './components/MoviesCardList/index';
 import { Footer } from '../../ui/Footer/index';
 import { ApiMovies } from '../../utils/MoviesApi';
 import { Preloader } from '../Movies/components/Preloader/index';
-import { Api } from '../../utils/MainApi';
-import { checkMoviesForUniqueness } from '../../utils/CheckMoviesForUniqueness';
 
 import '../Main/Main.css';
 import './Movies.css';
 
 export function Movies() {
-  const [movies, setMovies] = useState([]);
   const [preloadMovies, setPreloadMovies] = useState(false);
-  const [countMoviesShowMore, setCountMoviesShowMore] = useState([]);
-  const [hiddenMovies, setHiddenMovies] = useState([]);
-  const [saveMovies, setSaveMovies] = useState([]);
-  const [shortFilmsCheckbox, setShortFilmsCheckbox] = useState([]);
-  const [moviesSearchForm, setMoviesSearchForm] = useState('');
-  const [MoviesCheckbox, setMoviesCheckbox] = useState(false);
-  const [addedActive, setAddedActive] = useState(false);
+  const [allMovies, setAllMovies] = useState(JSON.parse(localStorage.getItem('allMovies')) || []);
+  const [additionCard, setAdditionCard] = useState(0);
+  const [valueSearchField, setValueSearchField] = useState(localStorage.getItem('searchValue'));
+  const [isSearchOne, setIsSearchOne] = useState(false);
+
+  useEffect(() => {
+    if (valueSearchField) {
+      localStorage.setItem('searchValue', valueSearchField);
+    }
+    if (valueSearchField === '' && !isSearchOne) {
+      setAllMovies([]);
+    }
+  }, [valueSearchField])
 
   function getDynamicMovies() {
     let adaptiveCount;
@@ -34,163 +37,98 @@ export function Movies() {
     return adaptiveCount;
   }
 
+  function setPropertyIsSaved(moviesList) {
+    if (!moviesList.length) return [];
+
+    return moviesList.map((movie) => ({
+      ...movie,
+      isSaved: false,
+    }))
+  }
+
+  function getRequestAllMovies() {
+    if (JSON.parse(localStorage.getItem('allMovies')) !== null) return;
+
+    ApiMovies.requestMovies()
+      .then((movies) => {
+        localStorage.setItem(
+          'allMovies',
+          JSON.stringify(setPropertyIsSaved(movies)),
+        );
+        setPreloadMovies(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setPreloadMovies(false);
+      });
+  }
+
   useEffect(() => {
-    setCountMoviesShowMore(getDynamicMovies());
-    const handlerResize = () => setCountMoviesShowMore(getDynamicMovies());
+    const handlerResize = () => getDynamicMovies();
     window.addEventListener('resize', handlerResize);
+    
+    getRequestAllMovies();
+
+    if (valueSearchField === null) {
+      localStorage.setItem('searchValue', '');
+    }
 
     return () => {
       window.removeEventListener('resize', handlerResize);
     };
   }, []);
 
-  function onChangeShowMoreHandler() {
-    let MoviesArr = movies;
-    let showMoreMovies = (MoviesArr).concat(hiddenMovies.splice(0, countMoviesShowMore[1]));
-    setMovies(showMoreMovies);
-  }
-
-  async function onChangeGetMoviesOnCheckboxActive(checkbox) {
-    let filterHiddenMovies = [];
-
-    let mainDataFilter= [];
-
-    let MoviesArr = movies;
-
-    if (checkbox) {
-      setShortFilmsCheckbox(hiddenMovies);
-      setMoviesCheckbox(MoviesArr);
-      mainDataFilter= MoviesArr.filter(({ duration }) => duration <= 40).concat(hiddenMovies.filter(({ duration }) => duration <= 40));
-    } else {
-      filterHiddenMovies = shortFilmsCheckbox;
-      mainDataFilter = MoviesCheckbox;
-    }
-    setMovies(mainDataFilter);
-    setHiddenMovies(filterHiddenMovies);
-  }
-
-  async function onChangeGetMoviesHandler(isInputValue) {
-    setShortFilmsCheckbox(false);
-    localStorage.setItem('shortFilmsCheckbox', false);
-    if (!isInputValue) {
-      return false;
-    }
-    
-    setPreloadMovies(true);
-
-    try {
-      const data = await ApiMovies.requestMovies();
-      let registerFilter = data.filter((
-        { nameRU }) => nameRU.toLowerCase().includes(isInputValue.toLowerCase()
-        ));
-        
-      localStorage.setItem('searchForm', isInputValue);
-      localStorage.setItem('movies', JSON.stringify(registerFilter));
-      const registerFilterData = registerFilter.splice(0, countMoviesShowMore[0]);
-      setMovies(registerFilterData);
-      
-      setHiddenMovies(registerFilter);
-      setShortFilmsCheckbox(registerFilterData);
-      setMoviesCheckbox(registerFilter);
-    } catch (err) {
-      setMovies([]);
-      localStorage.removeItem('movies');
-      localStorage.removeItem('moviesCheckbox');
-      localStorage.removeItem('searchForm');
-    } finally {
-      setPreloadMovies(false);
-    }
-  }
-
-  async function onClickSavedMovies(movie, save) {
-    localStorage.setItem('save', save);
-    if (save) {
-      const dataMovies = {
-        image: `https://api.nomoreparties.co${movie.image.url}`,
-        trailerLink: movie.trailerLink,
-        thumbnail: `https://api.nomoreparties.co${movie.image.url}`,
-        movieId: movie.id,
-        country: movie.country || 'Неизвестно',
-        director: movie.director,
-        duration: movie.duration,
-        year: movie.year,
-        description: movie.description,
-        nameRU: movie.nameRU,
-        nameEN: movie.nameEN,
-      };
-      try {
-        await Api.createMovie(dataMovies);
-        const afterSaved = await Api.readMoviesMe();
-        setSaveMovies(checkMoviesForUniqueness(afterSaved));
-      } catch (err) {
-        console.error(err);
+  function setIsSavedMovies(movies, idMovies) {
+    return movies.map((movie) => {
+      if (movie.id === idMovies) {
+        return {
+          ...movie,
+          isSaved: !movie.isSaved,
+        }
       }
-    } else {
-      try {
-        await Api.deleteMovie(movie._id);
-        const beforeSaved = await Api.readMoviesMe();
-        setSaveMovies(checkMoviesForUniqueness(beforeSaved));
-      } catch (err) {
-        console.error(err);
-      }
-    }
+
+      return movie;
+    })
   }
 
-  useEffect(() => {
-    ApiMovies.requestMovies()
-      .then((dataMovies) => {
-        setSaveMovies(dataMovies);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const allMoviesFromLocalStorage = JSON.parse(localStorage.getItem('allMovies'));
 
-    const arrayMovies = localStorage.getItem('movies');
-    
-    if (arrayMovies) 
-    {
-      const registerFilter = JSON.parse(arrayMovies);
-      setMovies(registerFilter.splice(0, getDynamicMovies()[0]));
-      setHiddenMovies(registerFilter);
-      setPreloadMovies(false);
-    }
+  function onClickToggleMovieHandler(idMovies) {
+    setAllMovies(setIsSavedMovies(allMovies, idMovies));
+    localStorage.setItem(
+      'allMovies',
+      JSON.stringify(setIsSavedMovies(allMoviesFromLocalStorage, idMovies)),
+    );
+  }
 
-    const arrayMoviesOnCheckBox = localStorage.getItem('moviesCheckbox');
-    const arrayMoviesSearchForm = localStorage.getItem('searchForm');
+  function resultArrayAllMovies() {
+    const dynamicMovies = getDynamicMovies();
 
-    if (arrayMoviesOnCheckBox) {
-      setMoviesCheckbox(arrayMoviesOnCheckBox === 'true');
-    }
-
-    if (arrayMoviesSearchForm) {
-      setMoviesSearchForm(arrayMoviesSearchForm);
-    }
-  }, [moviesSearchForm]);
-
-
-
+    return allMovies.slice(0, dynamicMovies[0] + dynamicMovies[1] * additionCard);
+  }
 
   return (
     <>
       <HeaderAuthorized />
         <main className="main_container">
-          <SearchForm 
-            onChangeGetMoviesHandler={onChangeGetMoviesHandler} 
-            shortFilmsCheckbox={shortFilmsCheckbox}
-            moviesSearchForm={moviesSearchForm}
-            onChangeGetMoviesOnCheckboxActive={onChangeGetMoviesOnCheckboxActive}
-            MoviesCheckbox={MoviesCheckbox}
+          <SearchForm
+            setMoviesAction={setAllMovies}
+            valueSearchField={valueSearchField}
+            setValueSearchField={setValueSearchField}
+            setIsSearchOne={setIsSearchOne}
           />
-          {preloadMovies && <Preloader />}
-          <MoviesCardList 
-            onChangeShowMoreHandler={onChangeShowMoreHandler}
-            movies={movies}
-            hiddenMovies={hiddenMovies}
-            countMoviesShowMore={countMoviesShowMore}
-            onClickSavedMovies={onClickSavedMovies}
-            saveMovies={saveMovies}
-            addedActive={addedActive}
-          />
+          {preloadMovies
+          ? <Preloader />
+          : (
+            <MoviesCardList 
+              movies={resultArrayAllMovies()}
+              sortedArray={allMovies}
+              onClickDeleteMoviesHandler={onClickToggleMovieHandler}
+              setStateAction={setAdditionCard}
+            />
+          )}
         </main>
       <Footer/>
     </>

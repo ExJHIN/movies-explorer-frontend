@@ -1,120 +1,136 @@
 import { useState, useEffect } from 'react';
 import { HeaderAuthorized } from '../../ui/HeaderAuthorized';
-import '../Main/Main.css';
 import { SearchForm } from '../../components/SearchForm/index';
-import { MoviesCardList } from '../Movies/components/MoviesCardList/index';
+import { MoviesCardList } from './components/MoviesCardList/index';
 import { Footer } from '../../ui/Footer/index';
-import { Api } from '../../utils/MainApi';
+import { ApiMovies } from '../../utils/MoviesApi';
 import { Preloader } from '../Movies/components/Preloader/index';
-import { checkMoviesForUniqueness } from '../../utils/CheckMoviesForUniqueness';
-import './SavedMovies.css';
 
-export function SavedMovies() {
+import '../Main/Main.css';
+import './Movies.css';
 
-// const currentUser = useContext(CurrentUserContext);
+export function Movies() {
+  const [preloadMovies, setPreloadMovies] = useState(false);
+  const [allMovies, setAllMovies] = useState(JSON.parse(localStorage.getItem('allMovies')) || []);
+  const [additionCard, setAdditionCard] = useState(0);
+  const [valueSearchField, setValueSearchField] = useState(localStorage.getItem('searchValue'));
+  const [isSearchOne, setIsSearchOne] = useState(false);
 
-const [movies, setMovies] = useState([]);
-
-const [preloadMovies, setPreloadMovies] = useState(false);
-
-const [hiddenMovies, setHiddenMovies] = useState([]);
-
-const [saveMovies, setSaveMovies] = useState(null);
-
-const [shortFilmsCheckbox, setShortFilmsCheckbox] = useState([]);
-
-const [MoviesCheckbox, setMoviesCheckbox] = useState(false);
-
-
-
-async function onChangeGetMoviesHandler(isInputValue, checkbox) {
-  // setErrorText('');
-  setPreloadMovies(true);
-  try {
-    const data = movies;
-    let registerFilter = data.filter(({ nameRU }) => nameRU.toLowerCase().includes(isInputValue.toLowerCase()));
-
-    if (checkbox) {
-      registerFilter = registerFilter.filter(({ duration }) => duration <= 40);
+  useEffect(() => {
+    if (valueSearchField) {
+      localStorage.setItem('searchValue', valueSearchField);
     }
-    setMovies(registerFilter);
-  } catch (err) {
-    // setErrorText(addErrorMovies);
-    setMovies([]);
-
-  } finally {
-    setPreloadMovies(false);
-  }
-}
-
-async function onChangeGetMoviesOnCheckboxActive(checkbox) {
-  let filterHiddenMovies = [];
-
-  let mainDataFilter= [];
-
-  let MoviesArr = movies;
-
-  if (checkbox) {
-    setShortFilmsCheckbox(hiddenMovies);
-    setMoviesCheckbox(MoviesArr);
-    mainDataFilter= MoviesArr.filter(({ duration }) => duration <= 40);
-  } else {
-    filterHiddenMovies = shortFilmsCheckbox;
-    mainDataFilter = MoviesCheckbox;
-  }
-  setMovies(mainDataFilter);
-  setHiddenMovies(filterHiddenMovies);
-}
-
-async function onGetSaveMoviesMe() {
-  const arrayMoviesSearchForm = localStorage.getItem('savedMovies');
-  if (arrayMoviesSearchForm) {
-    setMovies(checkMoviesForUniqueness(JSON.parse(arrayMoviesSearchForm)));
-  } else {
-    try {
-      const data = await Api.readMoviesMe();
-      setMovies(checkMoviesForUniqueness(data));
-      setHiddenMovies(data);
-    } catch (err) {
-      console.log(err);
+    if (valueSearchField === '' && !isSearchOne) {
+      setAllMovies([]);
     }
-  }
-}
+  }, [valueSearchField])
 
-async function onClickDeleteMoviesHandler(movie,save) {
-  if (!save) {
-    try {
-      await Api.deleteMovie(movie._id);
-      const newFilms = await Api.readMoviesMe();
-      setHiddenMovies(newFilms);
-      setMovies(newFilms);
-    } catch (err) {
-      console.log(err);
+  function getDynamicMovies() {
+    let adaptiveCount;
+    const width = window.innerWidth;
+    const config = {'1200': [12, 3], '900': [9, 3],'768': [8, 2],'240': [5, 2]};
+    Object.keys(config).sort((a, b) => a - b).forEach((key) => {
+        if (width > +key) {
+          adaptiveCount = config[key];
+        }
+      });
+    return adaptiveCount;
+  }
+
+  function setPropertyIsSaved(moviesList) {
+    if (!moviesList.length) return [];
+
+    return moviesList.map((movie) => ({
+      ...movie,
+      isSaved: false,
+    }))
+  }
+
+  function getRequestAllMovies() {
+    if (JSON.parse(localStorage.getItem('allMovies')) !== null) return;
+
+    ApiMovies.requestMovies()
+      .then((movies) => {
+        localStorage.setItem(
+          'allMovies',
+          JSON.stringify(setPropertyIsSaved(movies)),
+        );
+        setPreloadMovies(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setPreloadMovies(false);
+      });
+  }
+
+  useEffect(() => {
+    const handlerResize = () => getDynamicMovies();
+    window.addEventListener('resize', handlerResize);
+    
+    getRequestAllMovies();
+
+    if (valueSearchField === null) {
+      localStorage.setItem('searchValue', '');
     }
+
+    return () => {
+      window.removeEventListener('resize', handlerResize);
+    };
+  }, []);
+
+  function setIsSavedMovies(movies, idMovies) {
+    return movies.map((movie) => {
+      if (movie.id === idMovies) {
+        return {
+          ...movie,
+          isSaved: !movie.isSaved,
+        }
+      }
+
+      return movie;
+    })
   }
-}
 
-useEffect(() => {
-  onGetSaveMoviesMe();
-}, [saveMovies]);
+  const allMoviesFromLocalStorage = JSON.parse(localStorage.getItem('allMovies'));
 
-
-    return (
-      <>
-        <HeaderAuthorized />
-        <main className="main_container">
-          <SearchForm 
-            onChangeGetMoviesHandler={onChangeGetMoviesHandler}
-            onChangeGetMoviesOnCheckboxActive={onChangeGetMoviesOnCheckboxActive}
-          />
-          {preloadMovies && <Preloader />}
-          <MoviesCardList
-            movies={movies}
-            hiddenMovies={hiddenMovies}
-            onClickDeleteMoviesHandler={onClickDeleteMoviesHandler}
-          />
-        </main>
-        <Footer/>
-      </>
+  function onClickToggleMovieHandler(idMovies) {
+    setAllMovies(setIsSavedMovies(allMovies, idMovies));
+    localStorage.setItem(
+      'allMovies',
+      JSON.stringify(setIsSavedMovies(allMoviesFromLocalStorage, idMovies)),
     );
   }
+
+  function resultArrayAllMovies() {
+    const dynamicMovies = getDynamicMovies();
+
+    return allMovies.slice(0, dynamicMovies[0] + dynamicMovies[1] * additionCard);
+  }
+
+  return (
+    <>
+      <HeaderAuthorized />
+        <main className="main_container">
+          <SearchForm
+            setMoviesAction={setAllMovies}
+            valueSearchField={valueSearchField}
+            setValueSearchField={setValueSearchField}
+            setIsSearchOne={setIsSearchOne}
+          />
+          {preloadMovies
+          ? <Preloader />
+          : (
+            <MoviesCardList 
+              movies={resultArrayAllMovies()}
+              sortedArray={allMovies}
+              onClickDeleteMoviesHandler={onClickToggleMovieHandler}
+              setStateAction={setAdditionCard}
+            />
+          )}
+        </main>
+      <Footer/>
+    </>
+  );
+}
