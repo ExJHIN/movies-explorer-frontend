@@ -1,70 +1,94 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FilterCheckBox } from './components/FilterCheckbox/index';
 import './SearchForm.css';
 
-export function SearchForm({ onChangeGetMoviesHandler, onChangeGetMoviesOnCheckboxActive }) {
+export function SearchForm({
+  setMoviesAction,
+  valueSearchField,
+  setValueSearchField,
+  setIsSearchOne,
+}) {
+  const { pathname } = useLocation();
 
-const { register, formState : 
-    {errors},
-    handleSubmit,
-    reset,} = useForm({
-    mode: "onSubmit"
-    }
-);
+  const [isChecked, setIsChecked] = useState(JSON.parse(localStorage.getItem('isShortfilms')));
+  
+  function onChangeSetValueSearchFieldHandler(e) {
+    setValueSearchField(e.target.value);
+  }
+  
+  const allMovies = JSON.parse(localStorage.getItem('allMovies'));
 
-const [isInputValue,setIsInputValue] = useState('');
-const [checkbox, setCheckbox] = useState(false);
+  function onClickSearchByMoviesHandler() {
+    if (!valueSearchField && pathname === '/movies') return;
 
-function onClickSearchHandler(e) {
-    e.preventDefault();
-    onChangeGetMoviesHandler(isInputValue);
-    setCheckbox(false);
-    reset();
-}
-
-
-function handleTumblerChange(evt) {
-    const stateCheckbox = !checkbox;
-    setCheckbox(stateCheckbox);
-    onChangeGetMoviesOnCheckboxActive(stateCheckbox);
-}
-
-function onChangeSearchMoviesHandler (event) {
-    setIsInputValue(event.target.value);
-}
+    setIsSearchOne(true);
+    const valueSearchFieldUpperCase = valueSearchField.toUpperCase();
+    
+    setMoviesAction(allMovies.filter(({ nameRU, nameEN, duration }) => {
+      if (isChecked) {
+        return duration <= 40 && (nameRU.toUpperCase().includes(valueSearchFieldUpperCase) || nameEN.toUpperCase().includes(valueSearchFieldUpperCase));
+      }
+      return nameRU.toUpperCase().includes(valueSearchFieldUpperCase) || nameEN.toUpperCase().includes(valueSearchFieldUpperCase);
+    }))
+  }
 
   useEffect(() => {
-    setIsInputValue(isInputValue);
-  }, [isInputValue]);
+    onClickSearchByMoviesHandler();
+  }, [isChecked]);
 
-    return (
-        <section className="searchform_section">
-            <div className="promo_global_container-content">
-                <form className="searchform_section_container" name="search" noValidate onSubmit={handleSubmit(onClickSearchHandler)}>
-                    <input className="searchform_section_input" type="text" placeholder="Фильм" required value={isInputValue || ""}
-                        {...register    
-                            ('searchForm', 
-                                {
-                                    required: 'Введите ключевое слово для поиска',
-                                    minLength: {
-                                        value: 1,
-                                        message: 'Необходимо ввести ключевое слово'
-                                    },
-                                    onChange: (e) => onChangeSearchMoviesHandler(e),
-                                }
-                            )
-                        }
-                     />
-                    <button className="searchform_section_button" onClick={onClickSearchHandler} type="submit">Найти</button>
-                </form>
-                {errors?.searchForm && 
-                        <span className="register_form_input-error">
-                            {errors?.searchForm?.message || "Что-то пошло не так..."}
-                        </span>
-                }
-                <FilterCheckBox handleTumblerChange={handleTumblerChange} checkbox={checkbox} />
-            </div>
-        </section>
-    );
+  function onChangeSetIsShorFilmsHandler() {
+    if (JSON.parse(localStorage.getItem('isShortfilms')) !== null) {
+      localStorage.setItem('isShortfilms', !isChecked);
+      setIsChecked(JSON.parse(localStorage.getItem('isShortfilms')));
+    }
+  }
+
+  const { register, formState : 
+    {errors},
+    handleSubmit,
+  } = useForm({
+      mode: "onSubmit",
+    }
+  );
+
+  useEffect(() => {
+    if (isChecked === null) {
+      localStorage.setItem('isShortfilms', false);
+    }
+  }, []);
+
+  return (
+    <section className="searchform_section">
+      <div className="promo_global_container-content">
+        <form className="searchform_section_container" name="search" noValidate onSubmit={handleSubmit(onClickSearchByMoviesHandler)}>
+          <input className="searchform_section_input" type="text" placeholder="Фильм" required value={valueSearchField || ''}
+              {...register    
+                ('searchForm', 
+                  {
+                    required: 'Введите ключевое слово для поиска',
+                    minLength: {
+                      value: 1,
+                      message: 'Необходимо ввести ключевое слово'
+                    },
+                    onChange: (e) => onChangeSetValueSearchFieldHandler(e),
+                  }
+                )
+              }
+          />
+          <button className="searchform_section_button" onClick={onClickSearchByMoviesHandler} type="submit">Найти</button>
+        </form>
+        {errors?.searchForm && 
+          <span className="register_form_input-error">
+            {errors?.searchForm?.message || "Что-то пошло не так..."}
+          </span>
+        }
+        <FilterCheckBox
+          onChange={onChangeSetIsShorFilmsHandler}
+          checkbox={isChecked}
+        />
+      </div>
+    </section>
+  );
 }

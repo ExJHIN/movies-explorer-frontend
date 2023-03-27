@@ -107,12 +107,8 @@ useEffect(() => {
             onChangeGetMoviesHandler={onChangeGetMoviesHandler}
             onChangeGetMoviesOnCheckboxActive={onChangeGetMoviesOnCheckboxActive}
           />
-          {preloadMovies 
-              ? <Preloader />
-              : <></>
-            }
-          <MoviesCardList 
-            movie={hiddenMovies}
+          {preloadMovies && <Preloader />}
+          <MoviesCardList
             movies={movies}
             hiddenMovies={hiddenMovies}
             onClickDeleteMoviesHandler={onClickDeleteMoviesHandler}
