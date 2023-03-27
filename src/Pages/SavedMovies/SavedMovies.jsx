@@ -1,85 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import { HeaderAuthorized } from '../../ui/HeaderAuthorized';
-import { SearchForm } from '../../components/SearchForm/index';
-import { MoviesCardList } from './components/MoviesCardList/index';
-import { Footer } from '../../ui/Footer/index';
-import { ApiMovies } from '../../utils/MoviesApi';
-import { Preloader } from '../Movies/components/Preloader/index';
-
 import '../Main/Main.css';
-import './Movies.css';
+import { SearchForm } from '../../components/SearchForm/index';
+import { MoviesCardList } from '../Movies/components/MoviesCardList/index';
+import { Footer } from '../../ui/Footer/index';
+import { Preloader } from '../Movies/components/Preloader/index';
+import './SavedMovies.css';
 
-export function Movies() {
+export function SavedMovies() {
+  const path = useLocation();
+
   const [preloadMovies, setPreloadMovies] = useState(false);
-  const [allMovies, setAllMovies] = useState(JSON.parse(localStorage.getItem('allMovies')) || []);
-  const [additionCard, setAdditionCard] = useState(0);
-  const [valueSearchField, setValueSearchField] = useState(localStorage.getItem('searchValue'));
   const [isSearchOne, setIsSearchOne] = useState(false);
-
-  useEffect(() => {
-    if (valueSearchField) {
-      localStorage.setItem('searchValue', valueSearchField);
-    }
-    if (valueSearchField === '' && !isSearchOne) {
-      setAllMovies([]);
-    }
-  }, [valueSearchField])
-
-  function getDynamicMovies() {
-    let adaptiveCount;
-    const width = window.innerWidth;
-    const config = {'1200': [12, 3], '900': [9, 3],'768': [8, 2],'240': [5, 2]};
-    Object.keys(config).sort((a, b) => a - b).forEach((key) => {
-        if (width > +key) {
-          adaptiveCount = config[key];
-        }
-      });
-    return adaptiveCount;
-  }
-
-  function setPropertyIsSaved(moviesList) {
-    if (!moviesList.length) return [];
-
-    return moviesList.map((movie) => ({
-      ...movie,
-      isSaved: false,
-    }))
-  }
-
-  function getRequestAllMovies() {
-    if (JSON.parse(localStorage.getItem('allMovies')) !== null) return;
-
-    ApiMovies.requestMovies()
-      .then((movies) => {
-        localStorage.setItem(
-          'allMovies',
-          JSON.stringify(setPropertyIsSaved(movies)),
-        );
-        setPreloadMovies(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setPreloadMovies(false);
-      });
-  }
-
-  useEffect(() => {
-    const handlerResize = () => getDynamicMovies();
-    window.addEventListener('resize', handlerResize);
-    
-    getRequestAllMovies();
-
-    if (valueSearchField === null) {
-      localStorage.setItem('searchValue', '');
-    }
-
-    return () => {
-      window.removeEventListener('resize', handlerResize);
-    };
-  }, []);
-
+  const [allMovies, setAllMovies] = useState(JSON.parse(localStorage.getItem('allMovies')) || []);
+  const [saveMovies, setSaveMovies] = useState(allMovies.filter((movie) => movie.isSaved));
+  const [valueSearchField, setValueSearchField] = useState('');
+  
   function setIsSavedMovies(movies, idMovies) {
     return movies.map((movie) => {
       if (movie.id === idMovies) {
@@ -88,48 +25,50 @@ export function Movies() {
           isSaved: !movie.isSaved,
         }
       }
-
+      
       return movie;
     })
   }
-
+  
   const allMoviesFromLocalStorage = JSON.parse(localStorage.getItem('allMovies'));
 
   function onClickToggleMovieHandler(idMovies) {
-    setAllMovies(setIsSavedMovies(allMovies, idMovies));
+    setAllMovies(setIsSavedMovies(allMovies, idMovies))
     localStorage.setItem(
       'allMovies',
       JSON.stringify(setIsSavedMovies(allMoviesFromLocalStorage, idMovies)),
     );
   }
 
-  function resultArrayAllMovies() {
-    const dynamicMovies = getDynamicMovies();
+  useEffect(() => {
+    setSaveMovies(allMovies.filter((movie) => movie.isSaved));
+  }, [allMovies]);
 
-    return allMovies.slice(0, dynamicMovies[0] + dynamicMovies[1] * additionCard);
-  }
+  useEffect(() => {
+    setValueSearchField('');
+  }, [path]);
 
   return (
     <>
       <HeaderAuthorized />
-        <main className="main_container">
-          <SearchForm
-            setMoviesAction={setAllMovies}
-            valueSearchField={valueSearchField}
-            setValueSearchField={setValueSearchField}
-            setIsSearchOne={setIsSearchOne}
+      <main className="main_container">
+        <SearchForm
+          setMoviesAction={setAllMovies}
+          valueSearchField={valueSearchField}
+          setValueSearchField={setValueSearchField}
+          setPreloadMovies={setPreloadMovies}
+          setIsSearchOne={setIsSearchOne}
+        />
+        {preloadMovies
+        ? <Preloader />
+        : (
+          <MoviesCardList 
+            movies={saveMovies}
+            sortedArray={saveMovies}
+            onClickDeleteMoviesHandler={onClickToggleMovieHandler}
           />
-          {preloadMovies
-          ? <Preloader />
-          : (
-            <MoviesCardList 
-              movies={resultArrayAllMovies()}
-              sortedArray={allMovies}
-              onClickDeleteMoviesHandler={onClickToggleMovieHandler}
-              setStateAction={setAdditionCard}
-            />
-          )}
-        </main>
+        )}
+      </main>
       <Footer/>
     </>
   );

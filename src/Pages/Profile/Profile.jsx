@@ -15,7 +15,9 @@ export function Profile({exit, getUsetInfoProfile}) {
   const profileName = useRef(currentUser.name);
   const profileEmail = useRef(currentUser.email);
 
-  const editingButtonActive = () => {
+  const editingButtonActive = (e) => {
+    e.preventDefault();
+
     setActiveSave(prev => !prev);
   }
 
@@ -47,7 +49,8 @@ export function Profile({exit, getUsetInfoProfile}) {
 	};
 
   function getUsetInfoHandler() {
-		getUsetInfoProfile(isName, isEmail);
+    setActiveSave(prev => !prev);
+    getUsetInfoProfile(isName, isEmail);
     reset();
 	}
 
@@ -68,7 +71,7 @@ export function Profile({exit, getUsetInfoProfile}) {
           <section className="profile_section">
             <div className="profile_global_container">
               <h1 className="profile_title">Привет, {isName}!</h1>
-              <form className="profile_form" noValidate onSubmit={handleSubmit(getUsetInfoHandler)}>
+              <form className="profile_form" noValidate>
                 {errors?.ValidateProfileName && 
                   <span className="register_form_input-error">
                     {errors?.ValidateProfileName?.message || "Что-то пошло не так..."}
@@ -76,7 +79,7 @@ export function Profile({exit, getUsetInfoProfile}) {
                 }
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">Имя</label>
-                  <input className="profile_form_input" type="text" required  placeholder={isName || ""} value={isName || ""}
+                  <input className="profile_form_input" type="text" required  placeholder={isName || ""} readOnly={!isActiveSave} value={isName || ""}
                     {...register
                       (
                         "ValidateProfileName",
@@ -102,7 +105,7 @@ export function Profile({exit, getUsetInfoProfile}) {
                 </fieldset>
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">E-mail</label>
-                  <input className="profile_form_input" type="email" required placeholder={isEmail || ""} value={isEmail || ""} 
+                  <input className="profile_form_input" type="email" required placeholder={isEmail || ""} readOnly={!isActiveSave} value={isEmail || ""} 
                     {...register
                       (
                           "ValidateProfileEmail",
@@ -132,9 +135,21 @@ export function Profile({exit, getUsetInfoProfile}) {
                   </span>
                 }
                 {!isActiveSave ? (
-                  <button className="profile_edit" type="submit"  onClick={editingButtonActive}>Редактировать</button>
+                  <button
+                    className="profile_edit"
+                    onClick={editingButtonActive}
+                  >
+                    Редактировать
+                  </button>
                 ):(
-                  <button className={`${ isValid ? 'register_form_button profile_button' : 'register_form_button profile_button profile_edit_button_disabled'}`}  disabled={!isValid} onClick={editingButtonActive} type="submit">Сохранить</button>
+                  <button
+                    className={`${ isValid ? 'register_form_button profile_button' : 'register_form_button profile_button profile_edit_button_disabled'}`}
+                    disabled={!isValid}
+                    onClick={handleSubmit(getUsetInfoHandler)}
+                    type="submit"
+                  >
+                    Сохранить
+                  </button>
                 )
               }
               </form>
@@ -147,4 +162,3 @@ export function Profile({exit, getUsetInfoProfile}) {
     </>
   );
 }
-
