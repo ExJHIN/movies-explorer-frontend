@@ -10,16 +10,12 @@ export function Profile({exit, getUsetInfoProfile}) {
 
   const [isEmail, setEmail] = useState(currentUser.email);
   const [isName, setName] = useState(currentUser.name);
-  const [isActiveSave, setActiveSave]= useState(false);
+
+  const [isDisable, setIsDisable] = useState(true);
 
   const profileName = useRef(currentUser.name);
   const profileEmail = useRef(currentUser.email);
 
-  const editingButtonActive = (e) => {
-    e.preventDefault();
-
-    setActiveSave(prev => !prev);
-  }
 
   const {
     register,
@@ -48,10 +44,8 @@ export function Profile({exit, getUsetInfoProfile}) {
     setValue('email', event.target.value);
 	};
 
-  function getUsetInfoHandler() {
-    setActiveSave(prev => !prev);
+  function getUsetInfoHandler(e) {
     getUsetInfoProfile(isName, isEmail);
-    reset();
 	}
 
   profileName.current = currentUser.name;
@@ -63,6 +57,19 @@ export function Profile({exit, getUsetInfoProfile}) {
 		setEmail(currentUser.email);
     setValue('email', currentUser.email)
 	}, [currentUser, setValue]);
+
+  useEffect(() => {
+    if (isName === currentUser.name && isEmail === currentUser.email) 
+    {
+			setIsDisable(true);
+		} 
+    else if (isValid) {
+			setIsDisable(false);
+		} 
+    else if (!isValid) {
+			setIsDisable(true);
+		}
+	}, [currentUser.name, currentUser.email, isValid, isName, isEmail]);
   
   return (
     <>
@@ -71,7 +78,7 @@ export function Profile({exit, getUsetInfoProfile}) {
           <section className="profile_section">
             <div className="profile_global_container">
               <h1 className="profile_title">Привет, {isName}!</h1>
-              <form className="profile_form" noValidate>
+              <form className="profile_form" noValidate onSubmit={handleSubmit(getUsetInfoHandler)}>
                 {errors?.ValidateProfileName && 
                   <span className="register_form_input-error">
                     {errors?.ValidateProfileName?.message || "Что-то пошло не так..."}
@@ -79,7 +86,7 @@ export function Profile({exit, getUsetInfoProfile}) {
                 }
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">Имя</label>
-                  <input className="profile_form_input" type="text" required  placeholder={isName || ""} readOnly={!isActiveSave} value={isName || ""}
+                  <input className="profile_form_input" type="text" required  placeholder={isName || ""}  value={isName || ""}
                     {...register
                       (
                         "ValidateProfileName",
@@ -105,7 +112,7 @@ export function Profile({exit, getUsetInfoProfile}) {
                 </fieldset>
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">E-mail</label>
-                  <input className="profile_form_input" type="email" required placeholder={isEmail || ""} readOnly={!isActiveSave} value={isEmail || ""} 
+                  <input className="profile_form_input" type="email" required placeholder={isEmail || ""} value={isEmail || ""} 
                     {...register
                       (
                           "ValidateProfileEmail",
@@ -134,24 +141,13 @@ export function Profile({exit, getUsetInfoProfile}) {
                     {errors?.ValidateProfileEmail?.message || "Что-то пошло не так..."}
                   </span>
                 }
-                {!isActiveSave ? (
                   <button
                     className="profile_edit"
-                    onClick={editingButtonActive}
+                    disabled={isDisable}
+                    type="submit"
                   >
                     Редактировать
                   </button>
-                ):(
-                  <button
-                    className={`${ isValid ? 'register_form_button profile_button' : 'register_form_button profile_button profile_edit_button_disabled'}`}
-                    disabled={!isValid}
-                    onClick={handleSubmit(getUsetInfoHandler)}
-                    type="submit"
-                  >
-                    Сохранить
-                  </button>
-                )
-              }
               </form>
               <div className="profile_edit_container">
                 <button className="profile_edit_button" type="button" onClick={exit}>Выйти из аккаунта</button>

@@ -52,7 +52,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
 		})
 		.catch((err) => {
       setisAuthorizedCompleted(false);
-      alert(`${err.message}`);
+      alert(`${err}`);
 		});
 	};
 
@@ -78,7 +78,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
     setCurrentUser({});
     localStorage.removeItem('jwt');
     setLogIn(false);
-    localStorage.removeItem('searchValue');
+    localStorage.clear();
     navigate("/", { replace: true });
   };
 
