@@ -1,5 +1,4 @@
 import {useState, useContext, useEffect, useRef} from 'react';
-import { useForm } from "react-hook-form";
 import { HeaderAuthorized } from '../../ui/HeaderAuthorized/index';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import  "./Profile.css";
@@ -8,68 +7,90 @@ import  "./Profile.css";
 export function Profile({exit, getUsetInfoProfile}) {
   const currentUser = useContext(CurrentUserContext);
 
-  const [isEmail, setEmail] = useState(currentUser.email);
-  const [isName, setName] = useState(currentUser.name);
+  const [userName, setUserName] = useState(currentUser.name);
+  const [userEmail, setUserEmail] = useState(currentUser.email);
 
-  const [isDisable, setIsDisable] = useState(true);
+  const [editUserName, serEditUserName] = useState(userName);
+  const [editUserEmail, serEditUserEmail] = useState(userEmail);
+
+  const [isDisableRequest, setIsDisableRequest] = useState(true);
+  const [errorTextName, setErrorTextName] = useState('');
+  const [errorTextEmail, setErrorTextEmail] = useState('');
 
   const profileName = useRef(currentUser.name);
   const profileEmail = useRef(currentUser.email);
 
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState : { errors, isValid},
-    reset,
-  } = useForm
-  (
-    {
-    mode: "onChange",
-    defaultValues: {
-			name: currentUser.name,
-			email: currentUser.email,
-		  },
-    }
-  );
-  
-  function onChangeNameHandler(event) {
-		setName(event.target.value);
-    setValue('name', event.target.value);
-	};
-
-	function onChangeEmailHandler(event) {
-		setEmail(event.target.value);
-    setValue('email', event.target.value);
-	};
-
-  function getUsetInfoHandler(e) {
-    getUsetInfoProfile(isName, isEmail);
-	}
-
-  profileName.current = currentUser.name;
-  profileEmail.current = currentUser.email;
-
-	useEffect(() => {
-		setName(currentUser.name);
-    setValue('name', currentUser.name);
-		setEmail(currentUser.email);
-    setValue('email', currentUser.email)
-	}, [currentUser, setValue]);
+  useEffect(() => {
+    setUserName(currentUser.name);
+    setUserEmail(currentUser.email);
+    serEditUserName(currentUser.name);
+    serEditUserEmail(currentUser.email);
+  }, [currentUser]);
 
   useEffect(() => {
-    if (isName === currentUser.name && isEmail === currentUser.email) 
-    {
-			setIsDisable(true);
-		} 
-    else if (isValid) {
-			setIsDisable(false);
-		} 
-    else if (!isValid) {
-			setIsDisable(true);
-		}
-	}, [currentUser.name, currentUser.email, isValid, isName, isEmail]);
+    const editNameLength = editUserName.length;
+    const regExp = /^[А-ЯA-ZёәіңғүұқөһӘІҢҒҮҰҚӨҺ[\]h-]+$/umi;
+
+    if (!editNameLength) {
+      setErrorTextName('Обязательное поле для заполнения');
+      setIsDisableRequest(true);
+    } else if (editNameLength <= 2) {
+      setErrorTextName('Должно быть минимум не менее двух символов');
+      setIsDisableRequest(true);
+    } else if (editNameLength > 30) {
+      setErrorTextName('Должно быть не более 30 символов');
+      setIsDisableRequest(true);
+    } else if (!regExp.test(editUserName)) {
+      setErrorTextName('Разрешено использовать только латиницу и кириллицу');
+      setIsDisableRequest(true);
+    } else {
+      setErrorTextName('');
+      setIsDisableRequest(userName === editUserName && userEmail === editUserEmail);
+    }
+  }, [editUserName]);
+
+  useEffect(() => {
+    const editEmailLength = editUserEmail.length;
+    const regExp = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+    if (!editEmailLength) {
+      setErrorTextEmail('Обязательное поле для заполнения');
+      setIsDisableRequest(true);
+    } else if (editEmailLength <= 2) {
+      setErrorTextEmail('E-mail должен быть минимум не менее двух символов');
+      setIsDisableRequest(true);
+    } else if (editEmailLength > 30) {
+      setErrorTextEmail('E-mail должен быть не длиннее 30 символов');
+      setIsDisableRequest(true);
+    } else if (!regExp.test(editUserEmail)) {
+      setErrorTextEmail('E-mail указан не корректно');
+      setIsDisableRequest(true);
+    } else {
+      setErrorTextEmail('');
+      setIsDisableRequest(userName === editUserName && userEmail === editUserEmail);
+    }
+  }, [editUserEmail]);
+
+  const onChangeSetNameHandler = (e) => {
+    serEditUserName(e.target.value);
+  }
+
+  const onChangeSetEmailHandler = (e) => {
+    serEditUserEmail(e.target.value);
+  }
+
+  const onSubmitSetDataUserHandler = (e) => {
+    e.preventDefault();
+
+    setUserName(editUserName);
+    setUserEmail(editUserEmail);
+    getUsetInfoProfile(editUserName, editUserEmail);
+
+    profileName.current = editUserName;
+    profileEmail.current = editUserEmail;
+
+    setIsDisableRequest(true);
+  }
   
   return (
     <>
@@ -77,73 +98,43 @@ export function Profile({exit, getUsetInfoProfile}) {
       <main className="main_container">
           <section className="profile_section">
             <div className="profile_global_container">
-              <h1 className="profile_title">Привет, {isName}!</h1>
-              <form className="profile_form" noValidate onSubmit={handleSubmit(getUsetInfoHandler)}>
-                {errors?.ValidateProfileName && 
+              <h1 className="profile_title">Привет, {userName}!</h1>
+              <form className="profile_form" noValidate onSubmit={onSubmitSetDataUserHandler}>
+                {errorTextName && 
                   <span className="register_form_input-error">
-                    {errors?.ValidateProfileName?.message || "Что-то пошло не так..."}
+                    {errorTextName}
                   </span>
                 }
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">Имя</label>
-                  <input className="profile_form_input" type="text" required  placeholder={isName || ""}  value={isName || ""}
-                    {...register
-                      (
-                        "ValidateProfileName",
-                          {
-                            required: "Обязательное поле для заполнения",
-                            minLength: {
-                              value: 2,
-                              message: 'Должно быть минимум не менее двух символов'
-                            },
-                            maxLength: {
-                              value: 30,
-                              message: 'Должно быть не более 30 символов'
-                            },
-                            pattern: {
-                              value: /^[А-ЯA-ZёәіңғүұқөһӘІҢҒҮҰҚӨҺ[\]h-]+$/umi,
-                              message: 'Разрешено использовать только латиницу и кириллицу'
-                            },
-                            onChange: (e) => onChangeNameHandler(e),
-                        }
-                      )
-                    }         
-                    />
+                  <input
+                    className="profile_form_input"
+                    type="text"
+                    required
+                    placeholder="Pick"
+                    value={editUserName}
+                    onChange={onChangeSetNameHandler}
+                  />
                 </fieldset>
                 <fieldset className="profile_form_container">
                   <label className="profile_form_label">E-mail</label>
-                  <input className="profile_form_input" type="email" required placeholder={isEmail || ""} value={isEmail || ""} 
-                    {...register
-                      (
-                          "ValidateProfileEmail",
-                          {   
-                              required: "Обязательное поле для заполнения",
-                              minLength: {
-                              value: 2,
-                              message: 'E-mail должен быть минимум не менее двух символов'
-                              },
-                              maxLength: {
-                              value: 30,
-                              message: 'E-mail должен быть не длиннее 30 символов'
-                              },
-                              pattern: {
-                              value: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu,
-                              message: 'Введите ваш E-mail'
-                              },
-                              onChange: (e) => onChangeEmailHandler(e),
-                          }
-                      )
-                  }
+                  <input
+                    className="profile_form_input"
+                    type="text"
+                    required
+                    placeholder="example@example.com"
+                    value={editUserEmail}
+                    onChange={onChangeSetEmailHandler}
                   />
                 </fieldset>
-                {errors?.ValidateProfileEmail && 
+                {errorTextEmail && 
                   <span className="register_form_input-error">
-                    {errors?.ValidateProfileEmail?.message || "Что-то пошло не так..."}
+                    {errorTextEmail}
                   </span>
                 }
                   <button
-                    className="profile_edit"
-                    disabled={isDisable}
+                    className={`profile_edit ${isDisableRequest ? 'profile_edit_disble' : ''}`}
+                    disabled={isDisableRequest}
                     type="submit"
                   >
                     Редактировать

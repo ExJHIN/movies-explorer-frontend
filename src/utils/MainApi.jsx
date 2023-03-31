@@ -42,37 +42,32 @@ class MainApi {
     .then(this._checkHelper)
   }
 
-  createMovie(dataMovies) {
-    return fetch
-    (this._baseUrl + "/movies",
-    {
+  createMovie(movie) {
+    const newData = {
+      image: `https://api.nomoreparties.co${movie.image.url}`,
+      trailerLink: movie.trailerLink,
+      thumbnail: `https://api.nomoreparties.co${movie.image.url}`,
+      movieId: movie.id,
+      country: movie.country || 'Неизвестно',
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+    };
+
+    return fetch(this._baseUrl + "/movies", {
       method: "POST",
       headers: this._headers,
-      // body: JSON.stringify({
-      //   country: dataMovies.country,
-      //   director: dataMovies.director,
-      //   duration: dataMovies.duration,
-      //   year: dataMovies.year,
-      //   description: dataMovies.description,
-      //   image: dataMovies.image,
-      //   trailerLink: (validator.isURL(dataMovies.trailerLink) 
-      //       ? dataMovies.trailerLink 
-      //       : 'https://www.youtube.com/'),
-      //   nameRU: dataMovies.nameRU,
-      //   nameEN: dataMovies.nameEN,
-      //   thumbnail: dataMovies.thumbnail,
-      //     movieId: dataMovies.id,
-      // }),
-      body: JSON.stringify(dataMovies),
+      body: JSON.stringify(newData),
       credentials: 'include',
     })
     .then(this._checkHelper)
   }
 
   deleteMovie(_id) {
-    return fetch
-    (this._baseUrl + "/movies/" + _id,
-    {
+    return fetch(this._baseUrl + "/movies/" + _id, {
       method: "DELETE",
       headers: this._headers,
       credentials: 'include',

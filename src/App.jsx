@@ -97,7 +97,7 @@ const [isAuthorizedCompleted, setisAuthorizedCompleted] = useState(false);
 			.catch(
         (res) => {
         setisAuthorizedCompleted(false);
-        alert(`${res.message}`);
+        alert(`${res}`);
 			  }
       )
       .finally(()=> setIsLoad(false))

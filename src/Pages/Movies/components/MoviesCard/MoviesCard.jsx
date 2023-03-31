@@ -3,9 +3,11 @@ import './MoviesCard.css';
 
 export function MoviesCard({
     movie,
-    onClickDeleteMoviesHandler,
+    onClickToggleHandler,
+    isSave,
 }) {
-const  path  = useLocation();
+  const { pathname } = useLocation();
+  const isSavedMovies = pathname === '/saved-movies';
 
   return (
     <>
@@ -17,25 +19,35 @@ const  path  = useLocation();
           </p>
         </div>
         <Link className="movies_image_button" to={movie.trailerLink} target="_blank">
-          <img
-            className="movie_cover"
-            src={`https://api.nomoreparties.co${movie.image.url}`}
-            alt={movie.nameRU}
-          />
-        </Link>
-        { path.pathname === '/saved-movies' 
+          {isSavedMovies
             ? (
-              <button
-                className={path.pathname === '/saved-movies' ? "movie_add_button_saved" : "movie_add_button"}
-                onClick={() => onClickDeleteMoviesHandler(movie.id)}
+              <img
+                className="movie_cover"
+                src={movie.image}
+                alt={movie.nameRU}
               />
             )
             : (
-              <button
-                className={!movie.isSaved  ? "movie_saved_button" : "movie_add_button"}
-                onClick={() => onClickDeleteMoviesHandler(movie.id)}
-              >{!movie.isSaved ? 'Сохранить' : ''}</button>
-            )
+              <img
+                className="movie_cover"
+                src={`https://api.nomoreparties.co${movie.image.url}`}
+                alt={movie.nameRU}
+              />
+            )}
+        </Link>
+        {isSavedMovies
+          ? (
+            <button
+              className={isSavedMovies ? "movie_add_button_saved" : "movie_add_button"}
+              onClick={() => onClickToggleHandler(movie)}
+            />
+          )
+          : (
+            <button
+              className={!isSave  ? "movie_saved_button" : "movie_add_button"}
+              onClick={() => onClickToggleHandler(movie)}
+            >{!isSave ? 'Сохранить' : ''}</button>
+          )
         }
       </article>
     </>

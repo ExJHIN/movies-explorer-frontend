@@ -1,11 +1,11 @@
 import './MoviesStillButton.css';
 
 export function MoviesStillButton({
-  setStateAction,
+  setStateStepForViewCardAction,
 }) {
 
   function onChangeShowMoreHandler() {
-    setStateAction((prev) => prev + 1);
+    setStateStepForViewCardAction((prev) => prev + 1);
   }
 
   return (
