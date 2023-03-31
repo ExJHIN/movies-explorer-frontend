@@ -6,4 +6,6 @@
 
 Front-end https://movies.explorer.nomoredomains.work/
 
+Pull request: https://github.com/ExJHIN/movies-explorer-frontend/pull/2
+
 ---

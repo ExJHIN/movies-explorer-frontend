@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import  "./Header.css";
 
-export function Header({isLogged}) {
+export function Header() {
   return (
     <header
       className="header"

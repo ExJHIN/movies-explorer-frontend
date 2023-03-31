@@ -48,6 +48,7 @@
 
 .movie_cover {
     width: 100%;
+    height: 200px;
 }
 
 .movie_add_button {
@@ -55,23 +56,44 @@
     background-color: #EE3465;
     background-repeat: no-repeat;
     background-position: center;
-    
+
     border-radius: 30px;
     border: none;
-    
+
     width: 100px;
     height: 29px;
     padding: 12px 46px;
     margin: 18px auto;
-    
+
     cursor: pointer;
-    
+
     transition: all 0.3s ease;
 }
 
+.movie_delete_button {
+    background-image: url('../../../../images/cover_films-1.jpg');
+    background-color: #EE3465;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    border-radius: 30px;
+    border: none;
+
+    width: 100px;
+    height: 29px;
+    padding: 12px 46px;
+    margin: 18px auto;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+
+
 .movie_add_button_unsave {
     background-color: #F9F9F9;
-    
+
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -84,30 +106,78 @@
 
     border-radius: 30px;
     border: none;
-    
+
     width: 100px;
     height: 29px;
     padding: 9px 15px;
     margin: 18px auto;
-    
+
     cursor: pointer;
-    
+
     transition: all 0.3s ease;
 }
 
 .movie_add_button_unsave:hover {
     background-color: #EE3465;
-    color: #F9F9F9;
 }
 
 .movie_add_button:hover {
     opacity: 0.5;
 }
 
+.movie_saved_button {
+    background-color: #F9F9F9;
+    border-radius: 30px;
+    border: none;
+
+    width: 100px;
+    height: 29px;
+    padding: 9px 15px;
+    margin: 18px auto;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.movie_saved_button:hover {
+    background-color: #EE3465;
+    color: #F9F9F9;
+}
+
+.movie_add_button_saved {
+    background-image: url('../../../../images/delete_icon.svg');
+    background-color: #F9F9F9;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    border-radius: 30px;
+    border: none;
+
+    width: 100px;
+    height: 29px;
+    padding: 12px 46px;
+    margin: 18px auto;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+.movie_add_button_saved:hover {
+    background-color: #EE3465;
+}
 
 
 @media screen and (max-width: 568px) {
     .movie_card {
         width: 100%;
+    }
+
+    .movie_cover {
+        height: 168px;
     }
 }

@@ -40,6 +40,12 @@
     color: #000000;
     transition: 0.3s ease all;
 }
+
+.header__auth_navlink_active {
+    padding: 0 0 8px 0;
+    border-bottom: 2px solid #000000;
+
+}
 .header__auth_navlink:active {
     color:#2BE080;
 }
